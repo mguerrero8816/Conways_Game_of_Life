@@ -9,8 +9,10 @@ var ALIVE = 1;
 var DEAD = 0;
 var ROUNDS = 10;
 var ROUNDTIME = 300; //in miliseconds
+var FASTTIME = 100; //in miliseconds
 var lastCell;
 var jsGameBoard = []
+var gameStatus;
 
 function createBoard(){
   var cellNumber = 0;
@@ -25,15 +27,53 @@ function createBoard(){
   return cellNumber
 }
 
-function randomizeBoard(board){
-  newBoard = []
-  for(var i = 0; i < lastCell; i++){
-    var condition = Math.floor(Math.random()*2);
-    newBoard[i] = condition;
-    if(condition === ALIVE){
-      $("#" + i).addClass("cellAlive");
-    }
-  }
+function makeBlinker(board, location){
+  newBoard = board;
+  newBoard[location] = ALIVE;
+  newBoard[location+1] = ALIVE;
+  newBoard[location+2] = ALIVE;
+  updateHTML(newBoard);
+  return newBoard;
+}
+
+function makeGlider(board, location){
+  newBoard = board;
+  newBoard[location] = ALIVE;
+  newBoard[location+BOARDWIDTH] = ALIVE;
+  newBoard[location+BOARDWIDTH*2] = ALIVE;
+  newBoard[location+BOARDWIDTH*2-1] = ALIVE;
+  newBoard[location+BOARDWIDTH-2] = ALIVE;
+  updateHTML(newBoard);
+  return newBoard;
+}
+
+function makeJollyRoger(board, location){
+  newBoard = board;
+  newBoard[location] = ALIVE;
+  newBoard[location+1] = ALIVE;
+  newBoard[location+2] = ALIVE;
+  newBoard[location+6] = ALIVE;
+  newBoard[location+7] = ALIVE;
+  newBoard[location+8] = ALIVE;
+  newBoard[location - BOARDWIDTH - 2] = ALIVE;
+  newBoard[location - BOARDWIDTH + 3] = ALIVE;
+  newBoard[location - BOARDWIDTH + 5] = ALIVE;
+  newBoard[location - BOARDWIDTH + 10] = ALIVE;
+  newBoard[location - BOARDWIDTH*2 - 2] = ALIVE;
+  newBoard[location - BOARDWIDTH*2 + 3] = ALIVE;
+  newBoard[location - BOARDWIDTH*2 + 5] = ALIVE;
+  newBoard[location - BOARDWIDTH*2 + 10] = ALIVE;
+  newBoard[location - BOARDWIDTH*3 - 2] = ALIVE;
+  newBoard[location - BOARDWIDTH*3 + 3] = ALIVE;
+  newBoard[location - BOARDWIDTH*3 + 5] = ALIVE;
+  newBoard[location - BOARDWIDTH*3 + 10] = ALIVE;
+  newBoard[location - BOARDWIDTH*5] = ALIVE;
+  newBoard[location+1 - BOARDWIDTH*5] = ALIVE;
+  newBoard[location+2 - BOARDWIDTH*5] = ALIVE;
+  newBoard[location+6 - BOARDWIDTH*5] = ALIVE;
+  newBoard[location+7 - BOARDWIDTH*5] = ALIVE;
+  newBoard[location+8 - BOARDWIDTH*5] = ALIVE;
+  updateHTML(newBoard);
   return newBoard;
 }
 
@@ -121,43 +161,92 @@ function newCellCondition(board, location){
   }
 }
 
-function updateBoard(board){
+function cycleBoard(board){
   updatedBoard = [];
   for(var i = 0; i < board.length; i++){
     updatedBoard[i] = newCellCondition(board, i);
-    if(newCellCondition(board, i) === ALIVE){
-      $("#" + i).addClass("cellAlive");
-    }
-    if(newCellCondition(board, i) === DEAD){
-      $("#" + i).removeClass("cellAlive");
-    }
   }
+  updateHTML(updatedBoard);
   return updatedBoard;
 }
 
-function playGame(){
-  for(var i = 0; i < ROUNDS; i++){
-    jsGameBoard = updateBoard(jsGameBoard);
-    alert('hi');
+function startGame(speed){
+  stopGame();
+  gameStatus = setInterval(function(){
+    jsGameBoard = cycleBoard(jsGameBoard);
+  }, speed);
+}
+
+function updateHTML(board){
+  for(var i = 0; i < board.length; i++){
+    if(board[i] === ALIVE){
+      $("#" + i).addClass("cellAlive");
+    }
+    else{
+      $("#" + i).removeClass("cellAlive");
+    }
   }
+}
+
+function stopGame(){
+  clearInterval(gameStatus);
+}
+
+function clearBoard(board){
+  var newBoard = [];
+  for(var i = 0; i < board.length; i++){
+    newBoard[i] = DEAD;
+  }
+  updateHTML(newBoard);
+  return newBoard;
+}
+
+function randomizeBoard(board){
+  newBoard = []
+  for(var i = 0; i < lastCell; i++){
+    var condition = Math.floor(Math.random()*2);
+    newBoard[i] = condition;
+  }
+  updateHTML(newBoard);
+  return newBoard;
+}
+
+function clickToToggleCell(cell){
+  var cellID = parseInt($(cell).attr("id"));
+  if(jsGameBoard[cellID] === DEAD){
+    jsGameBoard[cellID] = ALIVE;
+  }
+  else{
+    jsGameBoard[cellID] = DEAD;
+  }
+  updateHTML(jsGameBoard);
 }
 
 $(document).ready(function(){
   lastCell = createBoard();
 
-  // jsGameBoard[1] = ALIVE;
-  // jsGameBoard[2] = ALIVE;
-  // jsGameBoard[11] = ALIVE;
-  // jsGameBoard[12] = ALIVE;
-  //
-  // jsGameBoard[15] = ALIVE;
-  // jsGameBoard[16] = ALIVE;
-  // jsGameBoard[17] = ALIVE;
+  $("td").on("click", function(){
+    clickToToggleCell(this)
+  });
 
-  jsGameBoard = randomizeBoard(jsGameBoard);
+  $("#normalButton").on("click", function(){
+    startGame(ROUNDTIME)});
 
-  setInterval(function(){
-    jsGameBoard = updateBoard(jsGameBoard);
-  }, ROUNDTIME);
+  $("#fastButton").on("click", function(){
+    startGame(FASTTIME)});
+
+  $("#stopButton").on("click", stopGame);
+
+  $("#randomizeButton").on("click", function(){
+    jsGameBoard = randomizeBoard(jsGameBoard);
+  })
+
+  $("#clearButton").on("click", function(){
+    jsGameBoard = clearBoard(jsGameBoard);
+  })
+
+  // jsGameBoard = makeGlider(jsGameBoard, BOARDWIDTH+8)
+  // jsGameBoard = makeBlinker(jsGameBoard, BOARDWIDTH+2);
+  // jsGameBoard = makeJollyRoger(jsGameBoard, 10+(BOARDHEIGHT-1)*BOARDWIDTH);
 
 });

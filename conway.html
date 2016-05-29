@@ -18,13 +18,25 @@
 
   <body>
     <div class="jumbotron">
-      <h1>Conway's Game of Life</h1>
+      <h1 class="text-center">Conway's Game of Life</h1>
     </div>
     <div class="container">
-      <table>
-        <tbody id="gameBoard">
-        </tbody>
-      </table>
+      <div class="col-sm-2 text-right">
+        <p>Speed</p>
+        <input type="button" value="Normal" id="normalButton"/></br>
+        <input type="button" value="Fast" id="fastButton"/></br>
+        <input type="button" value="Stop" id="stopButton"/></br>
+        </br>
+        <p>Settings</p>
+        <input type="button" value="Randomize" id="randomizeButton"/></br>
+        <input type="button" value="Clear" id="clearButton"/></br>
+      </div>
+      <div class="col-sm-10">
+        <table>
+          <tbody id="gameBoard">
+          </tbody>
+        </table>
+      </div>
     </div>
   </body>
 </html>
