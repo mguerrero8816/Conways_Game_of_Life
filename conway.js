@@ -3,16 +3,17 @@
 // Any live cell with more than three live neighbours dies, as if by over-population.
 // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
-var BOARDWIDTH = 50;
-var BOARDHEIGHT = 30;
+var BOARDWIDTH = 40;
+var BOARDHEIGHT = 50;
 var ALIVE = 1;
 var DEAD = 0;
-var ROUNDS = 10;
-var ROUNDTIME = 300; //in miliseconds
-var FASTTIME = 100; //in miliseconds
+var NORMALTIME = 300; //in milliseconds
+var FASTTIME = 100; //in milliseconds
+var ULTRATIME = 10; //in milliseconds
 var lastCell;
 var jsGameBoard = []
 var gameStatus;
+var turnCounter = 0;
 
 function createBoard(){
   var cellNumber = 0;
@@ -167,6 +168,8 @@ function cycleBoard(board){
     updatedBoard[i] = newCellCondition(board, i);
   }
   updateHTML(updatedBoard);
+  turnCounter++
+  $("#turnCounter").text(turnCounter);
   return updatedBoard;
 }
 
@@ -229,13 +232,19 @@ $(document).ready(function(){
     clickToToggleCell(this)
   });
 
+  $("#stopButton").on("click", stopGame);
+
+  $("#cycleButton").on("click", function(){
+    jsGameBoard = cycleBoard(jsGameBoard)});
+
   $("#normalButton").on("click", function(){
-    startGame(ROUNDTIME)});
+    startGame(NORMALTIME)});
 
   $("#fastButton").on("click", function(){
     startGame(FASTTIME)});
 
-  $("#stopButton").on("click", stopGame);
+  $("#ultraButton").on("click", function(){
+    startGame(ULTRATIME)});
 
   $("#randomizeButton").on("click", function(){
     jsGameBoard = randomizeBoard(jsGameBoard);
@@ -243,6 +252,11 @@ $(document).ready(function(){
 
   $("#clearButton").on("click", function(){
     jsGameBoard = clearBoard(jsGameBoard);
+  })
+
+  $("#resetCounterButton").on("click", function(){
+    turnCounter = 0;
+    $("#turnCounter").text(turnCounter);
   })
 
   // jsGameBoard = makeGlider(jsGameBoard, BOARDWIDTH+8)
