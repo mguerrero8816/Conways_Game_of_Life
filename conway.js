@@ -3,13 +3,14 @@
 // Any live cell with more than three live neighbours dies, as if by over-population.
 // Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
 
-var BOARDWIDTH = 40;
+var BOARDWIDTH = 50;
 var BOARDHEIGHT = 50;
 var ALIVE = 1;
 var DEAD = 0;
 var NORMALTIME = 300; //in milliseconds
 var FASTTIME = 100; //in milliseconds
 var ULTRATIME = 10; //in milliseconds
+var cellCreator = "single"; //can be "single", "upLeftGlider", "upRightGlider", "downLeftGlider", "downRightGlider"
 var lastCell;
 var jsGameBoard = []
 var gameStatus;
@@ -28,22 +29,80 @@ function createBoard(){
   return cellNumber
 }
 
+function createCellSelector(cell){
+  if(cellCreator === "single"){
+    clickToToggleCell(cell)
+  }
+  if(cellCreator === "upLeftGlider"){
+    makeUpLeftGlider(cell)
+  }
+  if(cellCreator === "upRightGlider"){
+    makeUpRightGlider(cell)
+  }
+  if(cellCreator === "downLeftGlider"){
+    makeDownLeftGlider(cell)
+  }
+  if(cellCreator === "downRightGlider"){
+    makeDownRightGlider(cell)
+  }
+}
+
+function clickToToggleCell(cell){
+  var cellID = parseInt($(cell).attr("id"));
+  if(jsGameBoard[cellID] === DEAD){
+    jsGameBoard[cellID] = ALIVE;
+  }
+  else{
+    jsGameBoard[cellID] = DEAD;
+  }
+  updateHTML(jsGameBoard);
+}
+
+function makeUpLeftGlider(cell){
+  var cellID = parseInt($(cell).attr("id"));
+  jsGameBoard[cellID-1] = ALIVE;
+  jsGameBoard[cellID+1] = ALIVE;
+  jsGameBoard[cellID-BOARDWIDTH] = ALIVE;
+  jsGameBoard[cellID-BOARDWIDTH-1] = ALIVE;
+  jsGameBoard[cellID+BOARDWIDTH-1] = ALIVE;
+  updateHTML(jsGameBoard);
+}
+
+function makeUpRightGlider(cell){
+  var cellID = parseInt($(cell).attr("id"));
+  jsGameBoard[cellID-1] = ALIVE;
+  jsGameBoard[cellID+1] = ALIVE;
+  jsGameBoard[cellID-BOARDWIDTH] = ALIVE;
+  jsGameBoard[cellID-BOARDWIDTH+1] = ALIVE;
+  jsGameBoard[cellID+BOARDWIDTH+1] = ALIVE;
+  updateHTML(jsGameBoard);
+}
+
+function makeDownLeftGlider(cell){
+  var cellID = parseInt($(cell).attr("id"));
+  jsGameBoard[cellID-1] = ALIVE;
+  jsGameBoard[cellID+1] = ALIVE;
+  jsGameBoard[cellID+BOARDWIDTH] = ALIVE;
+  jsGameBoard[cellID-BOARDWIDTH-1] = ALIVE;
+  jsGameBoard[cellID+BOARDWIDTH-1] = ALIVE;
+  updateHTML(jsGameBoard);
+}
+
+function makeDownRightGlider(cell){
+  var cellID = parseInt($(cell).attr("id"));
+  jsGameBoard[cellID-1] = ALIVE;
+  jsGameBoard[cellID+1] = ALIVE;
+  jsGameBoard[cellID+BOARDWIDTH] = ALIVE;
+  jsGameBoard[cellID-BOARDWIDTH+1] = ALIVE;
+  jsGameBoard[cellID+BOARDWIDTH+1] = ALIVE;
+  updateHTML(jsGameBoard);
+}
+
 function makeBlinker(board, location){
   newBoard = board;
   newBoard[location] = ALIVE;
   newBoard[location+1] = ALIVE;
   newBoard[location+2] = ALIVE;
-  updateHTML(newBoard);
-  return newBoard;
-}
-
-function makeGlider(board, location){
-  newBoard = board;
-  newBoard[location] = ALIVE;
-  newBoard[location+BOARDWIDTH] = ALIVE;
-  newBoard[location+BOARDWIDTH*2] = ALIVE;
-  newBoard[location+BOARDWIDTH*2-1] = ALIVE;
-  newBoard[location+BOARDWIDTH-2] = ALIVE;
   updateHTML(newBoard);
   return newBoard;
 }
@@ -214,22 +273,11 @@ function randomizeBoard(board){
   return newBoard;
 }
 
-function clickToToggleCell(cell){
-  var cellID = parseInt($(cell).attr("id"));
-  if(jsGameBoard[cellID] === DEAD){
-    jsGameBoard[cellID] = ALIVE;
-  }
-  else{
-    jsGameBoard[cellID] = DEAD;
-  }
-  updateHTML(jsGameBoard);
-}
-
 $(document).ready(function(){
   lastCell = createBoard();
 
   $("td").on("click", function(){
-    clickToToggleCell(this)
+    createCellSelector(this)
   });
 
   $("#stopButton").on("click", stopGame);
@@ -257,6 +305,26 @@ $(document).ready(function(){
   $("#resetCounterButton").on("click", function(){
     turnCounter = 0;
     $("#turnCounter").text(turnCounter);
+  })
+
+  $("#singleButton").on("click", function(){
+    cellCreator = "single"
+  })
+
+  $("#gliderUpLeftButton").on("click", function(){
+    cellCreator = "upLeftGlider"
+  })
+
+  $("#gliderUpRightButton").on("click", function(){
+    cellCreator = "upRightGlider"
+  })
+
+  $("#gliderDownLeftButton").on("click", function(){
+    cellCreator = "downLeftGlider"
+  })
+
+  $("#gliderDownRightButton").on("click", function(){
+    cellCreator = "downRightGlider"
   })
 
   // jsGameBoard = makeGlider(jsGameBoard, BOARDWIDTH+8)

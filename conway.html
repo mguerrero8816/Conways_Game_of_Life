@@ -20,27 +20,45 @@
     <div class="jumbotron">
       <h1 class="text-center">Conway's Game of Life</h1>
     </div>
-    <div class="container">
-      <div class="col-sm-2 text-right">
-        <p>Turn: <span id="turnCounter">0</span></p>
-        <input type="button" value="Reset Counter" id="resetCounterButton"/></br>
-        <p>Speed</p>
-        <input type="button" value="Stop" id="stopButton"/></br>
-        <input type="button" value="Cycle" id="cycleButton"/></br>
-        <input type="button" value="Normal" id="normalButton"/></br>
-        <input type="button" value="Fast" id="fastButton"/></br>
-        <input type="button" value="Ultra" id="ultraButton"/></br>
-        </br>
-        <p>Settings</p>
-        <input type="button" value="Randomize" id="randomizeButton"/></br>
-        <input type="button" value="Clear" id="clearButton"/></br>
+
+    <nav class="navbar navbar-default navbar-fixed-bottom">
+      <div class="container-fluid">
+        <p class="navbar-text">Turn: <span id="turnCounter">0</span></p>
+        <p class="navbar-text">Speed</p>
+        <input type="button" class="btn btn-default navbar-btn" value="Stop" id="stopButton"/>
+        <input type="button" class="btn btn-default navbar-btn" value="Cycle" id="cycleButton"/>
+        <input type="button" class="btn btn-default navbar-btn" value="Normal" id="normalButton"/>
+        <input type="button" class="btn btn-default navbar-btn" value="Fast" id="fastButton"/>
+        <input type="button" class="btn btn-default navbar-btn" value="Ultra" id="ultraButton"/>
       </div>
+    </nav>
+    <div class="container-fluid">
       <div class="col-sm-10">
         <table>
           <tbody id="gameBoard">
           </tbody>
         </table>
       </div>
+        <section>
+          <p>Options</p>
+          <input type="button" value="Reset Counter" id="resetCounterButton"/></br>
+          <input type="button" value="Randomize" id="randomizeButton"/></br>
+          <input type="button" value="Clear" id="clearButton"/></br>
+        </section>
+        <hr>
+        <section>
+          <p>Place Formations</p>
+          <button type="button" id="singleButton">Single</button></br>
+          <button type="button" id="gliderUpLeftButton">Glider <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"/><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"/></button></br>
+          <button type="button" id="gliderUpRightButton">Glider <span class="glyphicon glyphicon-arrow-up" aria-hidden="true"/><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"/></button></br>
+          <button type="button" id="gliderDownLeftButton">Glider <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/><span class="glyphicon glyphicon-arrow-left" aria-hidden="true"/></button></br>
+          <button type="button" id="gliderDownRightButton">Glider <span class="glyphicon glyphicon-arrow-down" aria-hidden="true"/><span class="glyphicon glyphicon-arrow-right" aria-hidden="true"/></button></br>
+        </section>
+      <div class="col-sm-2">
+      </div>
     </div>
+    </br>
+    </br>
+    </br>
   </body>
 </html>
