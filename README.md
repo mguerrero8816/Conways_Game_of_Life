@@ -16,3 +16,4 @@ Planned Features
 - More Formations
 - Toggle Between Limited and Wrapping Board
 - Adjust Board Size Option
+- Visual Identification of Stable/Oscillating/Moving Formations
