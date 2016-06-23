@@ -19,10 +19,10 @@ var turnCounter = 0;
 function createBoard(){
   var cellNumber = 0;
   for(var i = 0; i < BOARDHEIGHT; i++){
-    var row = $("#gameBoard").append("<tr></tr>");
+    $("#gameBoard").append('<tr id="r' + i + '"></tr>');
     for(var y = 0; y < BOARDWIDTH; y++){
       jsGameBoard[cellNumber] = DEAD;
-      $(row).append('<td id="' + cellNumber + '"></td>');
+      $("#r" + i + "").append('<td id="c' + cellNumber + '" value="'+cellNumber+'"></td>');
       cellNumber++
     }
   }
@@ -48,7 +48,7 @@ function createCellSelector(cell){
 }
 
 function clickToToggleCell(cell){
-  var cellID = parseInt($(cell).attr("id"));
+  var cellID = parseInt($(cell).attr("value"));
   if(jsGameBoard[cellID] === DEAD){
     jsGameBoard[cellID] = ALIVE;
   }
@@ -59,7 +59,7 @@ function clickToToggleCell(cell){
 }
 
 function makeUpLeftGlider(cell){
-  var cellID = parseInt($(cell).attr("id"));
+  var cellID = parseInt($(cell).attr("value"));
   jsGameBoard[cellID-1] = ALIVE;
   jsGameBoard[cellID+1] = ALIVE;
   jsGameBoard[cellID-BOARDWIDTH] = ALIVE;
@@ -69,7 +69,7 @@ function makeUpLeftGlider(cell){
 }
 
 function makeUpRightGlider(cell){
-  var cellID = parseInt($(cell).attr("id"));
+  var cellID = parseInt($(cell).attr("value"));
   jsGameBoard[cellID-1] = ALIVE;
   jsGameBoard[cellID+1] = ALIVE;
   jsGameBoard[cellID-BOARDWIDTH] = ALIVE;
@@ -79,7 +79,7 @@ function makeUpRightGlider(cell){
 }
 
 function makeDownLeftGlider(cell){
-  var cellID = parseInt($(cell).attr("id"));
+  var cellID = parseInt($(cell).attr("value"));
   jsGameBoard[cellID-1] = ALIVE;
   jsGameBoard[cellID+1] = ALIVE;
   jsGameBoard[cellID+BOARDWIDTH] = ALIVE;
@@ -89,7 +89,7 @@ function makeDownLeftGlider(cell){
 }
 
 function makeDownRightGlider(cell){
-  var cellID = parseInt($(cell).attr("id"));
+  var cellID = parseInt($(cell).attr("value"));
   jsGameBoard[cellID-1] = ALIVE;
   jsGameBoard[cellID+1] = ALIVE;
   jsGameBoard[cellID+BOARDWIDTH] = ALIVE;
@@ -103,36 +103,6 @@ function makeBlinker(board, location){
   newBoard[location] = ALIVE;
   newBoard[location+1] = ALIVE;
   newBoard[location+2] = ALIVE;
-  updateHTML(newBoard);
-  return newBoard;
-}
-
-function makeJollyRoger(board, location){
-  newBoard = board;
-  newBoard[location] = ALIVE;
-  newBoard[location+1] = ALIVE;
-  newBoard[location+2] = ALIVE;
-  newBoard[location+6] = ALIVE;
-  newBoard[location+7] = ALIVE;
-  newBoard[location+8] = ALIVE;
-  newBoard[location - BOARDWIDTH - 2] = ALIVE;
-  newBoard[location - BOARDWIDTH + 3] = ALIVE;
-  newBoard[location - BOARDWIDTH + 5] = ALIVE;
-  newBoard[location - BOARDWIDTH + 10] = ALIVE;
-  newBoard[location - BOARDWIDTH*2 - 2] = ALIVE;
-  newBoard[location - BOARDWIDTH*2 + 3] = ALIVE;
-  newBoard[location - BOARDWIDTH*2 + 5] = ALIVE;
-  newBoard[location - BOARDWIDTH*2 + 10] = ALIVE;
-  newBoard[location - BOARDWIDTH*3 - 2] = ALIVE;
-  newBoard[location - BOARDWIDTH*3 + 3] = ALIVE;
-  newBoard[location - BOARDWIDTH*3 + 5] = ALIVE;
-  newBoard[location - BOARDWIDTH*3 + 10] = ALIVE;
-  newBoard[location - BOARDWIDTH*5] = ALIVE;
-  newBoard[location+1 - BOARDWIDTH*5] = ALIVE;
-  newBoard[location+2 - BOARDWIDTH*5] = ALIVE;
-  newBoard[location+6 - BOARDWIDTH*5] = ALIVE;
-  newBoard[location+7 - BOARDWIDTH*5] = ALIVE;
-  newBoard[location+8 - BOARDWIDTH*5] = ALIVE;
   updateHTML(newBoard);
   return newBoard;
 }
@@ -242,10 +212,10 @@ function startGame(speed){
 function updateHTML(board){
   for(var i = 0; i < board.length; i++){
     if(board[i] === ALIVE){
-      $("#" + i).addClass("cellAlive");
+      $("#c" + i).addClass("cellAlive");
     }
     else{
-      $("#" + i).removeClass("cellAlive");
+      $("#c" + i).removeClass("cellAlive");
     }
   }
 }
